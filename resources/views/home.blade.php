@@ -13,7 +13,10 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
+                    <h2>Hello <small>{{ Auth::user()->name }}</small></h2>
+                    @foreach ( Auth::user()->roles() as $jabatan)
+                    <p>You're a {{ $jabatan['nama'] }}</p>
+                    @endforeach
                     You are logged in!
                 </div>
             </div>
