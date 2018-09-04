@@ -18,6 +18,7 @@
                     <p>You're a {{ $jabatan['nama'] }}</p>
                     @endforeach
                     You are logged in!
+                    <a href="{{ route('dashboard')}}" class="btn btn-success">Masuk ke halaman dashboard</a>
                 </div>
             </div>
         </div>

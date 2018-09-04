@@ -17,6 +17,7 @@ class CreateFasilitasTable extends Migration
             $table->increments('id');
             $table->string('tipe');
             $table->mediumText('deskripsi');
+            $table->float('harga');
             $table->timestamps();
         });
         Schema::table('kamars', function ($table) {
