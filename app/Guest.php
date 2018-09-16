@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guest extends Model
 {
-    //
+    public function reservasi() {
+    	return $this->hasOne('App\Reservasi');
+    }
 }

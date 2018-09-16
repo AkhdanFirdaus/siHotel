@@ -1,3 +1,15 @@
+@section('styles')
+<style type="text/css">
+    .tm {
+        font-size: 20px;        
+    }
+    .tm:hover {
+        letter-spacing: 3px;
+        transition: .5s;
+    }
+</style>
+@endsection
+
 <nav class="navbar navbar-expand-md navbar-light">
     <div class="container">
         {{-- <a class="navbar-brand" href="{{ url('/') }}">
@@ -10,7 +22,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <h4 class="mt-4"><strong>Book a Room</strong></h4>
+                <li><a class="nav-link text-light" href="{{ route('home') }}"><div class="tm">siHotel</div></a></li>
+                @auth
+                <li><a class="nav-link text-light" href="{{ route('dashboard') }}"><div class="tm">Dashboard</div></a></li>
+                @endauth
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -18,10 +33,10 @@
                 <!-- Authentication Links -->
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        <a class="nav-link text-light" href="{{ route('login') }}">{{ __('Login') }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                    <li class="nav-item text-light">
+                        <a class="nav-link text-light" href="{{ route('register') }}">{{ __('Register') }}</a>
                     </li>
                 @else
                     <li class="nav-item dropdown">

@@ -14,8 +14,8 @@ class AddShiftToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('id_shift')->after('password')->unsigned()->nullable();
-            $table->foreign('id_shift')->references('id')->on('shifts')->onDelete('cascade');
+            $table->integer('shift_id')->after('password')->unsigned()->nullable();
+            $table->foreign('shift_id')->references('id')->on('shifts')->onDelete('cascade');
         });
     }
 
@@ -27,8 +27,8 @@ class AddShiftToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['id_shift']);
-            $table->dropColumn('id_shift');            
+            $table->dropForeign(['shift_id']);
+            $table->dropColumn('shift_id');            
         });        
     }
 }

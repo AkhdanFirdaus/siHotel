@@ -21,7 +21,7 @@ class CreateFasilitasTable extends Migration
             $table->timestamps();
         });
         Schema::table('kamars', function ($table) {
-            $table->foreign('id_fasilitas')->references('id')->on('fasilitas')->onDelete('cascade');
+            $table->foreign('fasilitas_id')->references('id')->on('fasilitas')->onDelete('cascade');
         });
     }
 
@@ -34,7 +34,7 @@ class CreateFasilitasTable extends Migration
     {
         Schema::dropIfExists('fasilitas');
         Schema::table('kamars', function (Blueprint $table) {
-            $table->dropColumn(['id_fasilitas']);
+            $table->dropColumn(['fasilitas_id']);
         });
     }
 }

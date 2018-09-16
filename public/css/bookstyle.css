@@ -1,0 +1,59 @@
+html, body {
+	overflow-x: hidden;
+	height: 100%;
+}
+.bgkiri {
+	position: relative;
+	opacity: 0.8;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #fff;
+	font-weight: 600;
+	background-image: url(/img/bg/pexels-photo-453201.jpeg);
+	height: 100%;
+}
+.kanan{
+	overflow: auto;
+}
+.atas {
+	height: 80vh;
+	padding-top: 30%;	
+}
+.bawah {
+	height: 20vh;		
+}
+.bawah a {
+	font-size: 3.5em;
+}
+.kata {
+	height: 50%;
+	overflow: auto;
+	margin: auto;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+	padding: 50px;
+}
+textarea {
+	height: 14vh;
+}
+
+
+@media(max-width: 768px) {
+	.atas {
+		height: 80vh;
+		width: 50%;			
+	}
+	.bawah {
+		height: 20vh;			
+	}
+	.bawah a {
+		font-size: 3em;
+	}
+	.navbar {
+		padding-top: 20px;
+		padding-bottom: 20px;
+		border-bottom: 2px solid #ddd;
+	}		
+}

@@ -17,14 +17,22 @@
 
 Auth::routes();
 
-Route::resource('/', 'BookController');
+Route::get('/', 'PagesController@home')->name('home');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
 
-Route::group(['prefix' => '/dashboard'], function() {
-	Route::get('/', 'PagesController@dashboard')->name('dashboard');
-});
+Route::resource('book', 'BookController', ['except' => ['create', 'store']]);
+Route::post('{id}/pesan', 'BookController@pesan')->name('book.pesan');
+Route::post('cari', 'BookController@pesan')->name('book.pesan');
+Route::post('cari', 'BookController@search')->name('book.search');
 
-Route::group(['prefix' => '/book'], function() {
-	Route::get('/', 'PagesController@book')->name('book');
-});
+Route::get('{kode_booking}/verifikasi', 'BookController@showVerify')->name('book.verifikasi');
+Route::post('{kode_booking}/verifikasi', 'BookController@verify')->name('book.inverifikasi');
+
+Route::resource('look', 'LookController');
+
+Route::post('look/lihat', 'LookController@lihat')->name('lihatkode');
+
+Route::post('email', 'HomeController@email')->name('mail');
+
+Route::get('look/{kode_kamar}/pesan', 'LookController@order');

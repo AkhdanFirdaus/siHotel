@@ -15,21 +15,21 @@ class CreateReservasisTable extends Migration
     {
         Schema::create('reservasis', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_staff')->unsigned();
-            $table->integer('id_tamu')->unsigned();
-            $table->dateTime('tglReservasi');
-            $table->dateTime('check_in');
-            $table->dateTime('check_on');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('guest_id')->unsigned()->nullable();
+            $table->date('check_in');
+            $table->date('check_out');
             $table->integer('jml_partisipan')->unsigned();
-            $table->integer('id_kamar')->unsigned();
-            $table->integer('id_pembayaran')->unsigned();
+            $table->integer('kamar_id')->unsigned();
+            $table->integer('feedback_id')->unsigned()->nullable();
+            $table->integer('pembayaran_id')->unsigned();
             $table->timestamps();
         });
         Schema::table('reservasis', function ($table) {
-            $table->foreign('id_staff')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('id_tamu')->references('id')->on('guests')->onDelete('cascade');
-            $table->foreign('id_kamar')->references('id')->on('kamars')->onDelete('cascade');
-            $table->foreign('id_pembayaran')->references('id')->on('pembayarans')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
+            $table->foreign('kamar_id')->references('id')->on('kamars')->onDelete('cascade');
+            $table->foreign('pembayaran_id')->references('id')->on('pembayarans')->onDelete('cascade');
         });
     }
 
@@ -41,10 +41,10 @@ class CreateReservasisTable extends Migration
     public function down()
     {
         Schema::table('reservasis', function(Blueprint $table) {
-            $table->dropColumn(['id_staff']);
-            $table->dropColumn(['id_tamu']);
-            $table->dropColumn(['id_kamar']);
-            $table->dropColumn(['id_pembayaran']);
+            $table->dropColumn(['user_id']);
+            $table->dropColumn(['guest_id']);
+            $table->dropColumn(['kamar_id']);
+            $table->dropColumn(['pembayaran_id']);
         });
         Schema::dropIfExists('reservasis');        
     }

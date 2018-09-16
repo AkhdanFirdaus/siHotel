@@ -16,8 +16,10 @@ class CreateKamarsTable extends Migration
         Schema::create('kamars', function (Blueprint $table) {
             $table->increments('id');
             $table->string('kode_kamar');
-            $table->integer('id_fasilitas')->unsigned();
-            $table->boolean('status');
+            $table->integer('fasilitas_id')->unsigned();
+            $table->integer('hotel_id')->unsigned();
+            $table->integer('harga')->unsigned();
+            $table->enum('status', ['Tersedia', 'Terisi']);
             $table->timestamps();
         });
     }

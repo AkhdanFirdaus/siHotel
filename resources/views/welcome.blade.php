@@ -1,173 +1,110 @@
 @extends('layouts.app')
 
-@section('styles')
-<style type="text/css">
-    .parallax {
-        background: url(img/bg/pexels-photo-271639.jpeg) no-repeat;
-        -webkit-background-size: cover;
-        background-size: cover;
-        height: 60vh;
-    }
-    .foto {
-        background: url(img/bg/pexels-photo-271639.jpeg) no-repeat;
-        -webkit-background-size: cover;
-        background-size: cover;
-        height: 60vh;     
-    }
-    .min-nav {
-        font-size: 4em;
-    }
-    .konten {
-        background: #FF416C;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to left, #FF4B2B, #FF416C);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to left, #FF4B2B, #FF416C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    }
-    .more-info {
-        background-color: #eee;
-    }
-    i.fas {
-        font-size: 40px;
-    }
-    .nav-item {
-        padding: 20px;
-    }
-    .konten .nav-link {
-        font-size: 4em;    
-        background-color: #fff;    
-        border-radius: 2px;
-        text-align: center;
-    }
-</style>
-@endsection
-
-@section('scripts')
-{!! Html::script('scrollMagic/ScrollMagic.min.js') !!}
-{!! Html::script('scrollMagic/plugins/animation.gsap.min.js') !!}
-@endsection
-
 @section('content')
-<section class="text-center rounded-0 my-0">
-    <h1>siHotel</h1>
-    <p class="lead">Tempat istirahat kamu</p>
-</section>
-<section class="parallax text-center">
-    <div class="container-fluid py-5 thumbnail">
-        <h1 class="display-3">Welcome</h1>
-    </div>
-</section>
-<section class="konten">
-    <ul class="nav justify-content-center py-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">
-                <i class="fas fa-paper-plane"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-eye"></i>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#">
-                <i class="fas fa-key"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-hotel"></i>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-image"></i>
-            </a>
-        </li>
-    </ul>
+<header>
     <div class="container">
         <div class="row">
-            <div class="col-md-7">
-                <div class="row p-5 foto" style="background-color: #ddd;">
-                    <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto pariatur amet, placeat? Perspiciatis laboriosam pariatur quas unde ab facilis nulla?
-                    </div>                    
-                </div>
-                <div class="row p-5 capt-foto" style="background-color: #222; color: #fff;">
-                    <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, nulla perferendis aspernatur neque, totam modi eius. At error suscipit nulla.
-                    </div>                    
-                </div>
-            </div>
-            <div class="col-md-5 p-4" style="background-color: #fff;">
-                @include("form.reserve")
+            <div class="header-wrapper warna-oren offset-md-1 col-md-10">
+                @include('partials.navbar')
             </div>
         </div>
     </div>
-    <div class="container mt-4" style="color: #fff; font-weight: 600;">
-        <div class="row text-center">
-            <div class="col-md-4 py-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum dolorum soluta doloremque deleniti, excepturi fugiat ut ex provident sunt libero!</div>
-            <div class="col-md-4 py-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum dolorum soluta doloremque deleniti, excepturi fugiat ut ex provident sunt libero!</div>
-            <div class="col-md-4 py-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum dolorum soluta doloremque deleniti, excepturi fugiat ut ex provident sunt libero!</div>
+</header>
+
+<section class="intro-section">
+    <div class="container-fluid">
+        <div class="offset-md-1 offset-lg-2 col-md-10 col-lg-8 intro">
+            <div class="form-offset jumbotron shadow">
+                <div class="heading">
+                    <i class="fas fa-search fa-pull-left fa-2x" data-fa-transform="shrink-5 down-1.2 right-1" data-fa-mask="fas fa-circle" style="margin-top: 3px; color: #FFA804;"></i>
+                    <h2>Cari Hotelmu</h2>
+                </div>                
+                <hr>
+                {!! Form::open(['route' => "book.search", "method" => "POST"]) !!}
+                @include('form.reserve')
+                {!! Form::close() !!}
+            </div>
         </div>
     </div>
 </section>
-<section class="more-info">
+
+@include('partials.message')
+
+<section class="about-section mt-5 p-4 border-bottom warna-oren text-center">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 py-3">
-                <div class="card rounded-0">
-                    <img src="img/bg/pexels-photo-271639.jpeg" alt="" class="card-img-top rounded-0">
+            <div class="col-md-4">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ini Judul</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae tenetur ipsum voluptate nulla blanditiis, dolore aliquam dolores, expedita dolorem voluptatibus!</p>
-                        <hr>
-                        <a href="" class="btn btn-success btn-block">Selengkapnya</a>
+                        <i class="fas fa-hands-helping fa-4x" data-fa-transform="shrink-2 down-1" data-fa-mask="fas fa-circle" style="color: #E91E63;"></i>
+                        <h5 class=" mt-3 card-title">Terpercaya</h5>
+                        <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a class="card-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Lihat Mitra</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 py-3">
-                <div class="card rounded-0">
-                    <img src="" alt="" class="card-img-top">
+            </div>        
+            <div class="col-md-4">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ini Judul</h5>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae tenetur ipsum voluptate nulla blanditiis, dolore aliquam dolores, expedita dolorem voluptatibus!</p>
-                        <hr>
-                        <a href="" class="btn btn-success btn-block">Selengkapnya</a>
+                        <i class="fas fa-hand-holding-usd fa-4x" data-fa-transform="shrink-6" data-fa-mask="fas fa-circle" style="color: #009688;"></i>
+                        <h5 class="mt-3 card-title">Harga Terjangkau</h5>                    
+                        <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="card-link">Lihat Rekomendasi</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 py-3">
-                <div class="card rounded-0">
-                    <img src="" alt="" class="card-img-top">
+            </div>        
+            <div class="col-md-4">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ini Judul</h5>
-                        <p class="card-text text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae tenetur ipsum voluptate nulla blanditiis, dolore aliquam dolores, expedita dolorem voluptatibus!</p>
-                        <hr>
-                        <a href="" class="btn btn-success btn-block">Selengkapnya</a>
+                        <i class="fas fa-comments fa-4x" data-fa-transform="shrink-7" data-fa-mask="fas fa-circle" style="color: #FFC107;"></i>
+                        <h5 class="mt-3 card-title">Real Time Review</h5>                    
+                        <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a class="card-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Lihat Review</a>
                     </div>
                 </div>
+            </div>        
+        </div>  
+    </div>
+</section>
+
+<section class="collapse warna-hijau" id="collapseExample">
+    <div class="container p-5">
+        <table class="table table-light">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Pelanggan</th>
+                    <th scope="col">Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($reservasi as $index => $reserve)
+                <tr>
+                    <th scope="row">{{ $index+1 }}</th>
+                    <td>{{ $reserve->created_at->toDateString() }}</td>
+                    <td>{{ $reserve->guest['nama'] }}</td>
+                    <td>{{ $reserve->feedback['message'] }}</td>
+                </tr>
+                @endforeach
+                {{ $reservasi->links() }}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="form-section my-5">
+    <div class="container">
+        <div class="text-center">
+            <h2>Drop Us a Message</h2>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6">
+                @include('form.email')
             </div>
         </div>
     </div>
 </section>
-<footer class="p-4">
-    <ul class="nav justify-content-center">
-        <li class="nav-item"><a href="" class="nav-link">Test</a></li>
-        <li class="nav-item"><a href="" class="nav-link">Test</a></li>
-        <li class="nav-item"><a href="" class="nav-link">Test</a></li>
-    </ul>
-</footer>
-@endsection
 
-@section('script'){{-- 
-<script type="text/javascript">
-    var controller = new ScrollMagic.Controller();
-
-    new ScrollMagic.Scene({
-        triggerElement: ".parallax",
-        triggerHook: "onLeave"
-    })
-    .setPin(".parallax")
-    .addTo(controller);kb
-</script> --}}
+@include('partials.footer')
 @endsection

@@ -15,9 +15,11 @@ class CreatePembayaransTable extends Migration
     {
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_reservasi')->unsigned();
-            $table->float('jumlahPembayaran');
-            $table->string('tipePembayaran');
+            $table->string('kode_booking')->unique();
+            $table->string('kode_verifikasi')->unique();
+            $table->float('jumlahPembayaran')->nullable();
+            $table->string('tipePembayaran')->nullable();
+            $table->enum('status', ['Tunggu', 'Uang Muka', 'Lunas']);
             $table->timestamps();
         });
     }

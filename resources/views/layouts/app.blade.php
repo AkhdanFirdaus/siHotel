@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'siHotel') }} @yield('title')</title>    
+    <title>siHotel @yield('title')</title>    
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -17,21 +17,21 @@
     <!-- Styles -->
     {{ Html::style('css/app.css') }}
     {{ Html::style('css/custom.css') }}
+    {{ Html::style('css/responsive.css') }}
     @yield('styles')
 
     <!-- Scripts -->
     {{ Html::script('js/app.js')}}
-    {{ Html::script('fontAwesome5.2/js/all.min.js')}}    
+    {{ Html::script('fontAwesome5.3/js/all.min.js')}}    
     @yield('scripts')
 </head>
 <body>
-    <div id="app" class="row">
-        @yield('kiri')
-        <main class="col">
-            @include('partials.navbar')        
-            @yield('content')
-        </main>
-    </div>
+    @if(!Request::is('/'))
+        <div class="backBtn fixed-bottom">
+            <button onclick="history.go(-1)" class="btn btn-link rounded-circle"><span><i class="fas fa-arrow-left fa-2x"></i></span></button>
+        </div>
+    @endif    
+    @yield('content')
     
     <!-- Scripts -->
     @yield('script')

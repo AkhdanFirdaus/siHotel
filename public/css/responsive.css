@@ -1,0 +1,20 @@
+@media only screen and (max-width: 992px) {
+    .intro-section {
+        padding-top: 120px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .intro-section {
+        padding-top: 120px;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .header-wrapper {
+        font-size: 8px;
+    }
+    .intro-section {
+        padding-top: 250px;
+    }        
+}

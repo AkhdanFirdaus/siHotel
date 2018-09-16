@@ -3,6 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Session;
+use Auth;
+use App\Fasilitas;
+use App\Guest;
+use App\Kamar;
+use App\Pembayaran;
+use App\Reservasi;
+use App\Hotel;
+use App\Lokasi;
+use App\Feedback;
+
 
 class BookController extends Controller
 {
@@ -13,28 +25,11 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('book.book');
-    }
+        $types = Fasilitas::pluck('tipe', 'id');
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $rooms = Kamar::pluck('kode_kamar', 'id');
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('book.book')->withTypes($types)->withRooms($rooms);
     }
 
     /**
@@ -43,9 +38,12 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $hotel = Hotel::find($id);
+        $jmlkamar = Hotel::withCount('kamar')->find($id);
+        $detail = $request->session()->get('detail');
+        return view('hotel.hotel', ['hasilkamar' => $jmlkamar])->withHotel($hotel)->withDetail($detail);
     }
 
     /**
@@ -54,9 +52,83 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        $kamar = Kamar::find($id);
+        $detail = $request->session()->get('detail');
+        $code = strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
+        $request->session()->put('kode', $code);
+        $request->session()->put('idKamar', $kamar->id);
+
+        $diff = Carbon::parse($detail['checkin'])->diffInDays(Carbon::parse($detail['checkout']));
+        return view('book.bookNow', ['code' => $code, 'diff' => $diff])->withKamar($kamar)->withDetail($detail);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function pesan(Request $request)
+    {
+        if (!Auth::check()) {
+            # code...
+        }
+
+        $kode = $request->session()->get('kode');
+        $detail = $request->session()->get('detail');
+        $id = $request->session()->get('idKamar');
+        $kode_verify = strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
+        $room = Kamar::find($id);
+        
+        if ($room->status == 'Tersedia') {
+            if(!Auth::check()) {
+                $guest = new Guest();
+                $guest->nama = $request->nama;
+                $guest->email = $request->email;
+                $guest->kontak = $request->kontak;
+                $guest->save();
+
+                $guest1 = Guest::orderBy('created_at', 'desc')->first();
+            }
+
+            $pembayaran = new Pembayaran();
+            $pembayaran->kode_booking = $kode;
+            $pembayaran->kode_verifikasi = $kode_verify;
+            $pembayaran->save();
+            
+            $pembayaran1 = Pembayaran::orderBy('created_at', 'desc')->first();
+
+            $reserve = new Reservasi();
+            
+            if (Auth::check()) {
+                $reserve->user()->associate(Auth()->id);
+            }
+            else {
+                $reserve->guest()->associate($guest1);
+            }
+
+            $reserve->check_in = $detail['checkin'];
+            $reserve->check_out = $detail['checkout'];
+            $reserve->jml_partisipan = $detail['jml'];
+            $reserve->kamar_id = $room->id;
+            $reserve->pembayaran()->associate($pembayaran1);
+            $reserve->save();
+            
+            $room->status = 'Terisi';
+            $room->save();           
+
+            $reservasi = Reservasi::orderBy('created_at', 'desc')->first();
+
+            Session::flash('success', 'Berhasil memesan, cek email untuk verifikasi');            
+
+            return redirect()->route('book.verifikasi', $reservasi->id);
+        }
+        else {
+            Session::flash('fail', 'Ada Kesalahan Input data');   
+            return redirect()->back();
+        }   
     }
 
     /**
@@ -80,5 +152,76 @@ class BookController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'lokasi' => 'required',
+            'checkin' => 'required|date|date_format:Y-m-d|after:yesterday',
+            'checkout' => 'required|date|date_format:Y-m-d|after:checkin',
+            'jml' => 'required|gt:0'
+        ]);
+
+        $search = $request->lokasi;
+
+        $detail = ['checkin' => $request->checkin, 'checkout' => $request->checkout, 'jml' => $request->jml];
+
+        $request->session()->put('detail', $detail);
+
+        $lokasis = Lokasi::find($search);
+        $detail = Session::get('detail');
+        $jumlahpencarian = Lokasi::withCount('hotel')->find($search);
+
+        return view('book.bookSearch', [ 'hasil' => $jumlahpencarian])->withLokasis($lokasis)->withSearch($search)->withDetail($detail);
+    }
+
+    public function showVerify(Request $request, $id) {
+        $reservasi = Reservasi::find($id);    
+        $diff = Carbon::parse($reservasi->check_in)->diffInDays(Carbon::parse($reservasi->check_out));
+        return view('book.verifikasi', ['diff' => $diff])->withReservasi($reservasi);
+    }
+
+    public function verify(Request $request, $id) {
+        $request->validate([
+            'kodenya' => 'required',
+            'status' => 'required',
+            'jumlah' => 'required',
+            'review' => 'required',
+            'rate' => 'required'
+        ]);
+
+        $reservasi =  Reservasi::find($id);
+
+        if ($reservasi->pembayaran->kode_verifikasi == $request->kodenya) {
+            if ($request->jumlah < $reservasi->kamar->harga) {
+                Session::flash('fail', 'Nominal harga kurang');
+                return redirect()->back();
+            } else {
+                $feedback = new Feedback();
+                $feedback->subject = 'Review';
+                $feedback->message = $request->review;
+                $feedback->rating = $request->rate;
+                $feedback->save();
+
+                $feedback1 = Feedback::orderBy('created_at', 'desc')->first();
+
+                
+                $reservasi->feedback()->associate($feedback1);
+                if ($reservasi->kamar->harga == $request->jumlah) {
+                    $reservasi->pembayaran->status = 'Lunas';
+                } else {
+                    $reservasi->pembayaran->status = $request->status;
+                }                
+                $reservasi->pembayaran->jumlahPembayaran = $request->jumlah;
+                $reservasi->save();
+
+                Session::flash('success', 'Terimakasih telah memesan hotel di siHotel');
+                return redirect()->route('home');
+            }            
+        } else {
+            Session::flash('fail', 'Kode Verifikasi Salah');
+            return redirect()->back();
+        }
     }
 }

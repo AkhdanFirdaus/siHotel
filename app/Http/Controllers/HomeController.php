@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Reservasi;
 
 class HomeController extends Controller
 {
@@ -25,5 +26,16 @@ class HomeController extends Controller
     {
         $request->user()->authorizeRoles(['General Manager', 'Head Receptionist', 'Resepsionis']);
         return view('home');
+    }
+
+    public function email(Request $request)
+    {
+        
+        return redirect()->route('home');
+    }
+
+    public function dashboard() {
+        $reservasis = Reservasi::all();
+        return view('dashboard.dashboard')->withReservasis($reservasis);
     }
 }

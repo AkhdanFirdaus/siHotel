@@ -1,8 +1,154 @@
+/*Dasar*/
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
 html, body {
-    background-color: #fff;
+/*    background-color: #fff;*/
     color: #636b6f;
-    font-family: 'Raleway', sans-serif;
     font-weight: 100;
     height: 100%;
     margin: 0;
+}
+
+li {
+    list-style: none;
+    display: block;
+}
+header {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.backBtn {
+    bottom: 40px;
+    left: 40px;
+}
+    
+.backBtn button {
+    width: 50px;
+    height: 50px;
+}
+.backBtn button:hover {
+    background-color: #FFA159;
+    color: #fff;
+}
+
+/*Sering dipake*/
+
+.warna-oren {
+	background-color: #FFA159;	
+}
+
+.warna-hijau {
+    background-color: #00A885;
+}
+
+.text-oren {
+	color: #FFA159;		
+}
+
+.heading:before{ 
+    content:''; 
+    height: 10px; 
+    width: 50px; 
+    border-radius: 5px;
+    margin-bottom: 15px; 
+    display: block; 
+    background: #FFA804; 
+}
+
+.headingt:before{ 
+    content:''; 
+    height: 10px; 
+    width: 50px; 
+    border-radius: 5px;
+    margin-top: 15px; 
+    display: block; 
+    background: #FFA804; 
+}
+
+.headingtfa:before{ 
+    content:''; 
+    height: 10px; 
+    width: 50px; 
+    border-radius: 5px;
+    margin-left: 75px;
+    display: block; 
+    background: #FFA804; 
+}
+
+/*Bagian-bagian*/
+
+/*Section Header*/
+
+.header-wrapper {    
+    border-radius: 5px;
+    color: #fff;
+    /*font-size: 18px;*/
+    font-weight: 600;
+}
+
+
+/*Section intro*/
+
+.intro-section {
+    padding-top: 200px;
+    position: relative;
+    -webkit-background-size: cover;
+    background-size: cover;
+    z-index: 1;
+    background-image: url(/img/bg/apartment-bed-bedroom-271618.jpg);
+    /*background-attachment: fixed;*/
+}
+
+.intro-section:before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .2);
+}
+
+.intro-section:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    z-index: -1;
+    background: #fff;
+}
+
+.intro {
+    padding: 0;
+    margin-top: 0px;
+    background-color: #fff;
+}
+
+.form-offset {
+    margin: 0 auto;
+    /*padding: 30px;*/
+    overflow: hidden;
+    position: relative;
+    top: -30px;
+    background-color: #fff;
+}
+
+
+/*section-about*/
+
+
+/*Info-section*/
+
+
+/*footer*/
+
+footer {
+    
 }
