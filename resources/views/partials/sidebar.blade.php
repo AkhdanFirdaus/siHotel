@@ -1,67 +1,28 @@
-@section('styles')
-{{ Html::style('css/sidebar.css') }}
-@endsection
-
-@section('sidebar')
-<!-- Sidebar  -->
-<nav id="sidebar">
-    <div class="sidebar-header">
-        <h3>Bootstrap Sidebar</h3>
-        <strong>BS</strong>
-    </div>
-
-    <ul class="list-unstyled components">
-        <li class="active">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                <i class="fas fa-home"></i>
-                Home
-            </a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li>
-                    <a href="#">Home 1</a>
-                </li>
-                <li>
-                    <a href="#">Home 2</a>
-                </li>
-                <li>
-                    <a href="#">Home 3</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">
-                <i class="fas fa-briefcase"></i>
-                About
-            </a>
-            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                <i class="fas fa-copy"></i>
-                Pages
-            </a>
-            <ul class="collapse list-unstyled" id="pageSubmenu">
-                <li>
-                    <a href="#">Page 1</a>
-                </li>
-                <li>
-                    <a href="#">Page 2</a>
-                </li>
-                <li>
-                    <a href="#">Page 3</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-
-</nav>
-@endsection
-
-@section('script')
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
-
-        });
-    </script>
-@endsection
+<ul class="nav flex-column shadow">
+    <li class="nav-item bg-success p-3">
+        <a href="{{ route('home') }}" class="nav-link text-light"><h3>siHotel</h3></a>
+    </li>
+    <li class="nav-item jumbotron">
+        <h3>{{ Auth::user()->name }}</h3>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link">Hotel</a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('look.index') }}" class="nav-link">Room</a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link">Guest</a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link">Feedback</a>
+    </li>
+    @if(!Request::is('dashboard'))
+    <li class="nav-item bg-success p-3 mt-4 text-light">
+        <h3>{{ \Carbon\Carbon::now()->toFormattedDateString() }}</h3>
+    </li>
+    @endif
+</ul>               

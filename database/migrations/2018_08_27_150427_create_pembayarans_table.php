@@ -16,7 +16,8 @@ class CreatePembayaransTable extends Migration
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->increments('id');
             $table->string('kode_booking')->unique();
-            $table->string('kode_verifikasi')->unique();
+            $table->text('kode_verifikasi');
+            $table->string('pin')->unique()->nullable();
             $table->float('jumlahPembayaran')->nullable();
             $table->string('tipePembayaran')->nullable();
             $table->enum('status', ['Tunggu', 'Uang Muka', 'Lunas']);

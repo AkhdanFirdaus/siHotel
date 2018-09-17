@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-{!! Form::open(['route' => ['book.pesan', $kode_booking] , 'method' => 'POST']) !!}				
+{!! Form::open(['route' => ['book.pesan', $kamar->id] , 'method' => 'POST']) !!}				
 <div class="container p-5">		
 	<div class="row">
 		<div class="col-lg-8">				
@@ -74,7 +74,7 @@
 				<div class="card-body">
 					<dl>
 						<dd><h4>Kode Pemesanan</h4></dd>
-						<dt>{{$kode_booking}}</dt>
+						<dt>{{$code}}</dt>
 					</dl>
 				</div>
 			</div>

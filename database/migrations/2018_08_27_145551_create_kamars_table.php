@@ -18,7 +18,7 @@ class CreateKamarsTable extends Migration
             $table->string('kode_kamar');
             $table->integer('fasilitas_id')->unsigned();
             $table->integer('hotel_id')->unsigned();
-            $table->integer('harga')->unsigned();
+            $table->float('harga')->unsigned();
             $table->enum('status', ['Tersedia', 'Terisi']);
             $table->timestamps();
         });

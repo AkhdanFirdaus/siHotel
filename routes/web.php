@@ -19,20 +19,24 @@ Auth::routes();
 
 Route::get('/', 'PagesController@home')->name('home');
 
-Route::get('dashboard', 'HomeController@dashboard')->name('dashboard');
+Route::middleware('admin')->prefix('dashboard')->group(function() {
+	Route::get('/', 'AdminController@dashboard')->name('dashboard');
+	Route::post('approve', 'AdminController@approve')->name('dashboard.approve');
+});
 
 Route::resource('book', 'BookController', ['except' => ['create', 'store']]);
 Route::post('{id}/pesan', 'BookController@pesan')->name('book.pesan');
 Route::post('cari', 'BookController@pesan')->name('book.pesan');
 Route::post('cari', 'BookController@search')->name('book.search');
 
-Route::get('{kode_booking}/verifikasi', 'BookController@showVerify')->name('book.verifikasi');
-Route::post('{kode_booking}/verifikasi', 'BookController@verify')->name('book.inverifikasi');
+Route::get('{id}/verifikasi', 'BookController@showVerify')->name('book.verifikasi');
+Route::post('{id}/verifikasi', 'BookController@verify')->name('book.inverifikasi');
 
-Route::resource('look', 'LookController');
+Route::resource('look', 'LookController')->middleware('admin', ['except' => 'index']);
+Route::post('look/cari', 'LookController@search')->name('look.search');
 
-Route::post('look/lihat', 'LookController@lihat')->name('lihatkode');
+Route::post('look/kode', 'LookController@lihat')->name('lihat.kode');
 
-Route::post('email', 'HomeController@email')->name('mail');
+Route::post('email', 'PagesController@email')->name('mail');
 
 Route::get('look/{kode_kamar}/pesan', 'LookController@order');

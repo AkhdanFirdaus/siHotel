@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
 use Auth;
+use Mail;
 use App\Fasilitas;
 use App\Guest;
 use App\Kamar;
@@ -73,7 +74,11 @@ class BookController extends Controller
     public function pesan(Request $request)
     {
         if (!Auth::check()) {
-            # code...
+            $this->validate($request, [
+                'nama' => 'required',
+                'email' => 'required|email',
+                'kontak' => 'required',
+            ]);
         }
 
         $kode = $request->session()->get('kode');
@@ -90,15 +95,15 @@ class BookController extends Controller
                 $guest->kontak = $request->kontak;
                 $guest->save();
 
-                $guest1 = Guest::orderBy('created_at', 'desc')->first();
+                // $guest1 = Guest::orderBy('created_at', 'desc')->first();
             }
 
             $pembayaran = new Pembayaran();
             $pembayaran->kode_booking = $kode;
-            $pembayaran->kode_verifikasi = $kode_verify;
+            $pembayaran->kode_verifikasi = encrypt($kode_verify);
             $pembayaran->save();
             
-            $pembayaran1 = Pembayaran::orderBy('created_at', 'desc')->first();
+            // $pembayaran = Pembayaran::orderBy('created_at', 'desc')->first();
 
             $reserve = new Reservasi();
             
@@ -106,20 +111,33 @@ class BookController extends Controller
                 $reserve->user()->associate(Auth()->id);
             }
             else {
-                $reserve->guest()->associate($guest1);
+                $reserve->guest()->associate($guest);
             }
 
             $reserve->check_in = $detail['checkin'];
             $reserve->check_out = $detail['checkout'];
             $reserve->jml_partisipan = $detail['jml'];
             $reserve->kamar_id = $room->id;
-            $reserve->pembayaran()->associate($pembayaran1);
+            $reserve->pembayaran()->associate($pembayaran);
             $reserve->save();
             
             $room->status = 'Terisi';
             $room->save();           
 
             $reservasi = Reservasi::orderBy('created_at', 'desc')->first();
+
+            $reserve = [
+                'nama' => $reservasi->guest['nama'],
+                'email' => $reservasi->guest['email'],
+                'kode_verifikasi' => $reservasi->pembayaran['kode_verifikasi']
+            ];
+
+
+            Mail::send('email.verifyTemplate', $reserve, function($message) use ($reserve) {
+                $message->from('akhdan.musyaffa.firdaus@gmail.com');
+                $message->to($reserve['email']);
+                $message->subject('Kode Verifikasi Hotel');
+            });            
 
             Session::flash('success', 'Berhasil memesan, cek email untuk verifikasi');            
 
@@ -191,11 +209,13 @@ class BookController extends Controller
             'rate' => 'required'
         ]);
 
-        $reservasi =  Reservasi::find($id);
+        $reservasi = Reservasi::find($id);
 
-        if ($reservasi->pembayaran->kode_verifikasi == $request->kodenya) {
-            if ($request->jumlah < $reservasi->kamar->harga) {
-                Session::flash('fail', 'Nominal harga kurang');
+        $setengahnya = (50/100) * $reservasi->kamar->harga;
+
+        if (decrypt($reservasi->pembayaran->kode_verifikasi) == $request->kodenya) {
+            if ($request->jumlah < $setengahnya) {
+                Session::flash('fail', 'Nominal minimal 50% dari harga sewa');
                 return redirect()->back();
             } else {
                 $feedback = new Feedback();
@@ -204,19 +224,21 @@ class BookController extends Controller
                 $feedback->rating = $request->rate;
                 $feedback->save();
 
-                $feedback1 = Feedback::orderBy('created_at', 'desc')->first();
-
                 
-                $reservasi->feedback()->associate($feedback1);
-                if ($reservasi->kamar->harga == $request->jumlah) {
-                    $reservasi->pembayaran->status = 'Lunas';
-                } else {
-                    $reservasi->pembayaran->status = $request->status;
-                }                
-                $reservasi->pembayaran->jumlahPembayaran = $request->jumlah;
+                $reservasi->feedback()->associate($feedback);
                 $reservasi->save();
 
-                Session::flash('success', 'Terimakasih telah memesan hotel di siHotel');
+                if ($request->jumlah >= $setengahnya && $request->jumlah < $reservasi->kamar->harga) {
+                    $status = 'Uang Muka';
+                } else {                    
+                    $status = 'Lunas';
+                }
+                $reservasi->pembayaran->update([
+                    'status' => $status,         
+                    'jumlahPembayaran' => $request->jumlah
+                ]);
+
+                Session::flash('success', 'Terimakasih telah memesan hotel di siHotel, silahkan masukkan kode booking anda untuk mendapatkan password kamar');
                 return redirect()->route('home');
             }            
         } else {

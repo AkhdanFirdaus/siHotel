@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Kamar;
 use App\Reservasi;
+use App\Pembayaran;
 
 class LookController extends Controller
 {
@@ -13,10 +14,10 @@ class LookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($kode_booking)
     {
-        $rooms = Kamar::get();
-        return view('look.look')->withRooms($rooms);
+        $room = Kamar::find($kode_booking);
+        return view('look.look')->withRoom($room);
     }
 
     /**
@@ -26,7 +27,8 @@ class LookController extends Controller
      */
     public function create()
     {
-        //
+        $reservasis = Reservasi::all();
+        return view('dashboard.dash-reservasi')->withReservasis($reservasis);
     }
 
     /**
@@ -92,8 +94,9 @@ class LookController extends Controller
         return view('book.book')->withRooms($rooms);
     }
 
-    public function lihat(Request $request)
-    {
-
+    public function search(Request $request) {
+        $this->validate($request, ['cari' => 'required']);
+        $pembayaran = Pembayaran::where('kode_booking', $request->cari)->first();
+        return view('look.look')->withPembayaran($pembayaran);
     }
 }

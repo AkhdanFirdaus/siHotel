@@ -39,7 +39,7 @@
                         <i class="fas fa-hands-helping fa-4x" data-fa-transform="shrink-2 down-1" data-fa-mask="fas fa-circle" style="color: #E91E63;"></i>
                         <h5 class=" mt-3 card-title">Terpercaya</h5>
                         <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="card-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Lihat Mitra</a>
+                        <a class="card-link" data-toggle="collapse" href="#collapseExample3" role="button" aria-expanded="false" aria-controls="collapseExample">Cek Status Bookingmu</a>
                     </div>
                 </div>
             </div>        
@@ -49,7 +49,7 @@
                         <i class="fas fa-hand-holding-usd fa-4x" data-fa-transform="shrink-6" data-fa-mask="fas fa-circle" style="color: #009688;"></i>
                         <h5 class="mt-3 card-title">Harga Terjangkau</h5>                    
                         <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Lihat Rekomendasi</a>
+                        <a data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2" class="card-link">Lihat Rekomendasi</a>
                     </div>
                 </div>
             </div>        
@@ -67,31 +67,7 @@
     </div>
 </section>
 
-<section class="collapse warna-hijau" id="collapseExample">
-    <div class="container p-5">
-        <table class="table table-light">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Pelanggan</th>
-                    <th scope="col">Review</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($reservasi as $index => $reserve)
-                <tr>
-                    <th scope="row">{{ $index+1 }}</th>
-                    <td>{{ $reserve->created_at->toDateString() }}</td>
-                    <td>{{ $reserve->guest['nama'] }}</td>
-                    <td>{{ $reserve->feedback['message'] }}</td>
-                </tr>
-                @endforeach
-                {{ $reservasi->links() }}
-            </tbody>
-        </table>
-    </div>
-</section>
+@include('partials.welcomeCollapse')
 
 <section class="form-section my-5">
     <div class="container">

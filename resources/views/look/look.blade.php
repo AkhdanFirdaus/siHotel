@@ -7,33 +7,40 @@
 	</div>
 
 	<div class="container">
-		<div class="row">
-			@foreach($rooms as $count => $room)
-				@if($count % 3 == 0)
-				</div><div class="row">
-				@endif
-				<div class="col-md-4">
-					<div class="card">					
-						<div class="card-body">
-							<h3 class="card-title">Kode Kamar: {{ $room->kode_kamar }}</h3>
-							<p class="card-text">{{ $room->fasilitas['deskripsi'] }}</p>
-						</div>
-						<ul class="list-group list-group-flush">								
-							<li class="list-group-item">{{ $room->fasilitas['tipe'] }}</li>
-							<li class="list-group-item">{{ $room->fasilitas['harga'] }}</li>
-						</ul>				
-						<div class="card-body">																
-							@if($room->status == 0)					
-								<div class="alert alert-danger">
-									<strong>Kamar sudah terpesan </strong>
-								</div>
-							@else
-								<a href="/look/{{ $room->kode_kamar }}/edit" class="card-link btn btn-primary">Pesan</a>
-							@endif							
-						</div>
-					</div>
-				</div>
-			@endforeach
+		<div class="card-body">
+			<h5><small>a.n. </small>{{ $pembayaran->reservasi->guest['nama'] }}</h5>
+			<hr>
+			<div class="card-text">
+				<dl class="row mb-0">
+					<dd class="col-4">Check In</dd>
+					<dt class="col">{{$pembayaran->reservasi->check_in}} | {{ Carbon\Carbon::parse($pembayaran->reservasi->check_in)->diffForHumans(\Carbon\Carbon::now())}}</dt>
+				</dl>
+				<dl class="row mb-0">
+					<dd class="col-4">Check Out</dd>
+					<dt class="col">{{$pembayaran->reservasi->check_out}}</dt>
+				</dl>
+				<dl class="row mb-0">
+					<dd class="col-4">Status</dd>					
+					<dt class="col">{{$pembayaran->reservasi->pembayaran->status}} | IDR {{ number_format($pembayaran->reservasi->pembayaran['jumlahPembayaran'] - $pembayaran->reservasi->kamar['harga'], null, ',', '.') }}</dt>
+				</dl>
+				<dl class="row mb-0">
+					<dd class="col-4">PIN Kamar</dd>
+					<dt class="col">{{$pembayaran->reservasi->pembayaran->pin}}</dt>
+				</dl>
+			</div>
+			<hr>
+			<div class="form-row">
+				<div class="col">
+					@if($pembayaran->reservasi->pembayaran->status == 'Lunas')
+					<button class="btn btn-primary btn-block">Print</button>
+					@else
+					<button class="btn btn-warning btn-block">Warn</button>
+					@endif
+				</div>					
+				<div class="col">
+					<button class="btn btn-danger btn-block">Cancel Booking</button>
+				</div>					
+			</div>
 		</div>
 	</div>
 @endsection
