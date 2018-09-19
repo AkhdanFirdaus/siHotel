@@ -14,7 +14,7 @@
                 <tr>
                     <th scope="row">{{ $index+1 }}</th>
                     <td>{{ $reserve->created_at->toDateString() }}</td>
-                    <td>{{ $reserve->guest['nama'] }}</td>
+                    <td>{{ $reserve->guest['nama'] }} {{ $reserve->user['name'] }}</td>
                     <td>{{ $reserve->feedback['message'] }}</td>
                 </tr>
                 @endforeach

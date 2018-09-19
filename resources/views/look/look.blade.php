@@ -12,6 +12,10 @@
 			<hr>
 			<div class="card-text">
 				<dl class="row mb-0">
+					<dd class="col-4">Kode Booking</dd>
+					<dt class="col">{{ decrypt($pembayaran->kode_booking) }}</dt>
+				</dl>
+				<dl class="row mb-0">
 					<dd class="col-4">Check In</dd>
 					<dt class="col">{{$pembayaran->reservasi->check_in}} | {{ Carbon\Carbon::parse($pembayaran->reservasi->check_in)->diffForHumans(\Carbon\Carbon::now())}}</dt>
 				</dl>
@@ -25,17 +29,19 @@
 				</dl>
 				<dl class="row mb-0">
 					<dd class="col-4">PIN Kamar</dd>
-					<dt class="col">{{$pembayaran->reservasi->pembayaran->pin}}</dt>
+					<dt class="col">
+						@if($pembayaran->reservasi->pembayaran->pin == null)
+						Tunggu beberapa saat
+						@else
+						{{$pembayaran->reservasi->pembayaran->pin}}
+						@endif
+					</dt>
 				</dl>
 			</div>
 			<hr>
 			<div class="form-row">
 				<div class="col">
-					@if($pembayaran->reservasi->pembayaran->status == 'Lunas')
 					<button class="btn btn-primary btn-block">Print</button>
-					@else
-					<button class="btn btn-warning btn-block">Warn</button>
-					@endif
 				</div>					
 				<div class="col">
 					<button class="btn btn-danger btn-block">Cancel Booking</button>

@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
-use Mail;
-use Session;
 use App\Reservasi;
 use App\Fasilitas;
 use App\Kamar;
 use App\Lokasi;
+use App\Feedback;
+use App\Guest;
+use Auth;
+use Mail;
+use Session;
 
 class PagesController extends Controller
 {
@@ -53,6 +55,16 @@ class PagesController extends Controller
             $message->to('akhdan.musyaffa.firdaus@gmail.com');
             $message->subject($kontak['subject']);
         }); 
+        
+        $guest = new Guest();
+        $guest->nama = $kontak['nama'];
+        $guest->email = $kontak['email'];
+        $guest->save();
+
+        $mail = new Feedback();
+        $mail->subject = $kontak['subject'];
+        $mail->message = $kontak['pesan'];        
+        $mail->save();
 
         Session::flash('success', 'Terimakasih Atas Masukkan Anda');
         return redirect()->back();

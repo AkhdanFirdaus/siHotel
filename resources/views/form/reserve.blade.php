@@ -1,5 +1,4 @@
 <div class="container">	
-		@if(Request::is('/'))
 		<div class="form-row">			
 			<div class="col form-group">
 				{{ Form::label('Dimana?') }}
@@ -11,7 +10,6 @@
 				</div>
 			</div>
 		</div>
-		@endif
 
 		<div class="form-row">
 			<div class="col-md-5 form-group">
@@ -20,11 +18,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
 					</div>
-					@if(Request::is('/'))
 					{{ Form::date('checkin', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
-					@else
-					{{ Form::date('checkin', $detail['checkin'], ['class' => 'form-control', 'required' => 'required']) }}
-					@endif
 				</div>					
 			</div>
 
@@ -34,11 +28,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
 					</div>
-					@if(Request::is('/'))
-					{{ Form::date('checkout', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
-					@else
-					{{ Form::date('checkout', $detail['checkout'], ['class' => 'form-control', 'required' => 'required']) }}
-					@endif
+					{{ Form::date('checkout', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}					
 				</div>					
 			</div>				
 
@@ -48,11 +38,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1"><i class="fas fa-user-friends"></i></span>
 					</div>
-					@if(Request::is('/'))
-					{{ Form::number('jml', 1, ['class' => 'form-control']) }}
-					@else
-					{{ Form::number('jml', $detail['jml'], ['class' => 'form-control']) }}
-					@endif
+					{{ Form::number('jml', 1, ['class' => 'form-control']) }}					
 				</div>					
 			</div>
 		</div>	

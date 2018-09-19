@@ -1,5 +1,6 @@
 {!! Form::open(['route' => 'mail','method' => 'POST']) !!}
 
+@guest
 <div class="form-group">
     {{ Form::label('nama', 'Nama') }}
     {{ Form::text('nama', '', ['class' => 'form-control']) }}          
@@ -9,6 +10,7 @@
     {{ Form::label('email', 'Email') }}
     {{ Form::text('email', '', ['class' => 'form-control']) }}        
 </div>
+@endguest
 
 <div class="form-group">
     {{ Form::label('subject', 'Subject') }}

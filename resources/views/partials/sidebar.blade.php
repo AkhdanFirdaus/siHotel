@@ -9,10 +9,10 @@
         <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link">Hotel</a>
+        <a href="{{ route('hotel.index') }}" class="nav-link">Hotel</a>
     </li>
     <li class="nav-item">
-        <a href="{{ route('look.index') }}" class="nav-link">Room</a>
+        <a href="{{ route('kamar.index') }}" class="nav-link">Room</a>
     </li>
     <li class="nav-item">
         <a href="" class="nav-link">Guest</a>

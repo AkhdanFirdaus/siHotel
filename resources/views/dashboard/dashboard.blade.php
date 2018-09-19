@@ -45,7 +45,7 @@
 								</div>
 							</div>
 							<hr>
-							<a href="{{ route('look.create') }}" class="text-light btn btn-info btn-block">Selengkapnya</a>
+							<a href="{{ route('dashboard.reservasi') }}" class="text-light btn btn-info btn-block">Selengkapnya</a>
 						</div>
 					</div>
 				</div>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGuestsTable extends Migration
+class AddNorekToPembayaransTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateGuestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('guests', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nama');
-            $table->string('email');
-            $table->string('kontak')->nullable();
-            $table->timestamps();
+        Schema::table('pembayarans', function (Blueprint $table) {
+            $table->string('no_rekening')->nullable();
         });
     }
 
@@ -29,6 +25,8 @@ class CreateGuestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('guests');
+        Schema::table('pembayarans', function (Blueprint $table) {
+            $table->dropColumn('no_rekening');
+        });
     }
 }

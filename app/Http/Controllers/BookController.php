@@ -94,21 +94,17 @@ class BookController extends Controller
                 $guest->email = $request->email;
                 $guest->kontak = $request->kontak;
                 $guest->save();
-
-                // $guest1 = Guest::orderBy('created_at', 'desc')->first();
             }
 
             $pembayaran = new Pembayaran();
             $pembayaran->kode_booking = $kode;
             $pembayaran->kode_verifikasi = encrypt($kode_verify);
             $pembayaran->save();
-            
-            // $pembayaran = Pembayaran::orderBy('created_at', 'desc')->first();
 
             $reserve = new Reservasi();
             
             if (Auth::check()) {
-                $reserve->user()->associate(Auth()->id);
+                $reserve->user()->associate(Auth::user()->id);
             }
             else {
                 $reserve->guest()->associate($guest);
@@ -126,11 +122,21 @@ class BookController extends Controller
 
             $reservasi = Reservasi::orderBy('created_at', 'desc')->first();
 
-            $reserve = [
+            if (Auth::check()) {
+                $reserve = [
+                    'nama' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                    'kode_booking' => $reservasi->pembayaran['kode_booking'],
+                    'kode_verifikasi' => $reservasi->pembayaran['kode_verifikasi']
+                ];
+            } else {
+                $reserve = [
                 'nama' => $reservasi->guest['nama'],
                 'email' => $reservasi->guest['email'],
+                'kode_booking' => $reservasi->pembayaran['kode_booking'],
                 'kode_verifikasi' => $reservasi->pembayaran['kode_verifikasi']
             ];
+            }       
 
 
             Mail::send('email.verifyTemplate', $reserve, function($message) use ($reserve) {
@@ -169,7 +175,7 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 
     public function search(Request $request)

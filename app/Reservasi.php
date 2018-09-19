@@ -25,4 +25,15 @@ class Reservasi extends Model
     public function feedback() {
         return $this->belongsTo('App\Feedback');  
     }
+
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($reservasi) { // before delete() method call this
+             $reservasi->user()->delete();
+             $reservasi->guest()->delete();
+             $reservasi->pembayaran()->delete();
+             // do the rest of the cleanup...
+        });
+    }
 }

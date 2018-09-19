@@ -1,3 +1,5 @@
+
+<h2><small>Kode Booking</small> {{ $kode_booking }}</h2>
 <h2><small>Kode Verifikasi</small> siHotel</h2>
 
 <div>	
@@ -5,7 +7,7 @@
 	<strong>{{ decrypt($kode_verifikasi) }}</strong>
 </p>
 <hr>
-<p>Silahkan Konfirmasi pembayaran anda</p>
+<a href="http://127.0.0.1:8000/{{ $kode_booking }}/verifikasi">Klik disini untuk Konfirmasi pembayaran anda </a>
 </div>
 
 <footer>dikirim oleh siHotel</footer>
