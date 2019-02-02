@@ -29,11 +29,8 @@ class Reservasi extends Model
     public static function boot() {
         parent::boot();
 
-        static::deleting(function($reservasi) { // before delete() method call this
-             $reservasi->user()->delete();
-             $reservasi->guest()->delete();
+        static::deleting(function($reservasi) {
              $reservasi->pembayaran()->delete();
-             // do the rest of the cleanup...
         });
     }
 }

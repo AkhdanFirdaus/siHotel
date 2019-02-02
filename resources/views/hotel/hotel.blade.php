@@ -1,26 +1,8 @@
 @extends('layouts.app')
 
-@section('content')
-<section class="container">
-	<div class="card shadow my-4">
-		<div class="card-body">
-			<div class="row">
-				<div class="col-md-4">
-					<img src="{{ asset('/img/hotel_image/'.$hotel->hotel_image )}}" alt="" class="img-fluid">
-				</div>
-				<div class="col p-4">					
-					<h3>{{ $hotel->nama }}</h3>
-					<p class="lead"><small><i class="fas fa-map-marker-alt"></i> {{ $hotel->alamat }}</small></p>
-					<hr class="border">
-					<dl class="row">
-						<dt class="col-3">Kamar tersedia</dt>
-						<dd class="col">{{ $hasilkamar->kamar_count }}</dd>
-					</dl>	
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+@section('styles')
+{!! Html::style('/css/bookstyle.css') !!}
+@endsection
 
 <section class="container">
 	<div class="card shadow">
@@ -91,7 +73,7 @@
 							<td>{{ $kamar->kode_kamar }}</td>
 							<td>{{ $kamar->fasilitas->tipe }}</td>							
 							<td>
-								{{ Form::open(['route' => ['book.edit', $kamar->id], 'method' => 'GET']) }}
+								{{ Form::open(['route' => ['book.kamar', $kamar->kode_kamar], 'method' => 'GET']) }}
 								@if($kamar->status == 'Terisi')
 									{{Form::submit('Terisi', ['class' => 'btn btn-danger btn-block', 'disabled'])}}
 								@else
@@ -107,6 +89,3 @@
 		</div>
 	</div>
 </section>
-
-@include('partials.footer')
-@endsection

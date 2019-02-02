@@ -5,34 +5,14 @@
 @section('content')	
 <div class="container-fluid">
 	<div class="row">
-	<div class="col-lg-3 text-center">
+	<div class="col-lg-3 text-center p-0 m-0">
 		@include('partials.sidebar')
 	</div>
 	<div class="col-lg-9">
-		@if(Request::is('dashboard'))
-		<ul class="nav nav-fill text-light">
-			<li class="nav-item p-2 bg-primary">
-				<a href="" class="nav-link text-light">
-					<h3><small>Lorem</small></h3>
-				</a>
-			</li>
-			<li class="nav-item p-2 bg-primary">
-				<a href="" class="nav-link text-light">
-					<h3><small>Lorem</small></h3>
-				</a>
-			</li>
-			<li class="nav-item p-2 bg-primary">
-				<a href="" class="nav-link text-light">
-					<h3><small>Lorem</small></h3>
-				</a>
-			</li>
-			<li class="nav-item p-2 bg-primary">
-				<a href="" class="nav-link text-light">
-					<h3><small>Lorem</small></h3>
-				</a>
-			</li>
-		</ul>
+		@if(Request::is('dashboard'))		
 		<div class="py-4">
+			<h1>Dashboard</h3>
+			<hr>
 			<div class="row">
 				<div class="col-lg-4">
 					<div class="card border-0">
@@ -60,7 +40,7 @@
 								</div>
 							</div>
 							<hr>
-							<a class="text-light btn btn-info btn-block">Selengkapnya</a>
+							<a class="text-light btn btn-info btn-block" href="{{ route('dashboard.manageUser') }}">Selengkapnya</a>
 						</div>
 					</div>
 				</div>

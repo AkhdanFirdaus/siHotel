@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'hotel_id'
     ];
 
     /**
@@ -33,9 +33,9 @@ class User extends Authenticatable
 
     public function authorizeRoles($roles) {
         if (is_array($roles)) {
-            return $this->hasAnyRole($roles) || abort(401, 'This action is unauthorized.');
+            return $this->hasAnyRole($roles) || redirect()->route('home');
         }
-        return $this->hasRole($roles) || abort(401, 'This action is unauthorized.');
+        return $this->hasRole($roles) || redirect()->route('home');
     }
 
     public function hasAnyRole($roles) {
@@ -44,5 +44,9 @@ class User extends Authenticatable
 
     public function hasRole($role) {
         return null !== $this->roles()->where('nama', $role)->first();
+    }
+
+    public function hotel() {
+        return $this->belongsTo('App\Hotel');
     }
 }

@@ -39,10 +39,10 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $slug)
     {
-        $hotel = Hotel::find($id);
-        $jmlkamar = Hotel::withCount('kamar')->find($id);
+        $hotel = Hotel::where('slug', $slug)->first();
+        $jmlkamar = Hotel::withCount('kamar')->where('slug', $slug)->first();
         $detail = $request->session()->get('detail');
         return view('hotel.hotel', ['hasilkamar' => $jmlkamar])->withHotel($hotel)->withDetail($detail);
     }
@@ -53,13 +53,13 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $kode_kamar)
     {
-        $kamar = Kamar::find($id);
+        $kamar = Kamar::where('kode_kamar', $kode_kamar)->first();
         $detail = $request->session()->get('detail');
         $code = strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
         $request->session()->put('kode', $code);
-        $request->session()->put('idKamar', $kamar->id);
+        $request->session()->put('kode_kamar', $kamar->kode_kamar);
 
         $diff = Carbon::parse($detail['checkin'])->diffInDays(Carbon::parse($detail['checkout']));
         return view('book.bookNow', ['code' => $code, 'diff' => $diff])->withKamar($kamar)->withDetail($detail);
@@ -83,9 +83,9 @@ class BookController extends Controller
 
         $kode = $request->session()->get('kode');
         $detail = $request->session()->get('detail');
-        $id = $request->session()->get('idKamar');
+        $kodeKamar = $request->session()->get('kode_kamar');
         $kode_verify = strtoupper(substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 8));
-        $room = Kamar::find($id);
+        $room = Kamar::where('kode_kamar', $kodeKamar)->first();
         
         if ($room->status == 'Tersedia') {
             if(!Auth::check()) {
@@ -97,8 +97,9 @@ class BookController extends Controller
             }
 
             $pembayaran = new Pembayaran();
-            $pembayaran->kode_booking = $kode;
+            $pembayaran->kode_booking = encrypt($kode);
             $pembayaran->kode_verifikasi = encrypt($kode_verify);
+            $pembayaran->no_rekening = $request->noRek;
             $pembayaran->save();
 
             $reserve = new Reservasi();
@@ -116,9 +117,6 @@ class BookController extends Controller
             $reserve->kamar_id = $room->id;
             $reserve->pembayaran()->associate($pembayaran);
             $reserve->save();
-            
-            $room->status = 'Terisi';
-            $room->save();           
 
             $reservasi = Reservasi::orderBy('created_at', 'desc')->first();
 
@@ -131,23 +129,23 @@ class BookController extends Controller
                 ];
             } else {
                 $reserve = [
-                'nama' => $reservasi->guest['nama'],
-                'email' => $reservasi->guest['email'],
-                'kode_booking' => $reservasi->pembayaran['kode_booking'],
-                'kode_verifikasi' => $reservasi->pembayaran['kode_verifikasi']
-            ];
+                    'nama' => $reservasi->guest['nama'],
+                    'email' => $reservasi->guest['email'],
+                    'kode_booking' => $reservasi->pembayaran['kode_booking'],
+                    'kode_verifikasi' => $reservasi->pembayaran['kode_verifikasi']
+                ];
             }       
 
 
-            Mail::send('email.verifyTemplate', $reserve, function($message) use ($reserve) {
-                $message->from('akhdan.musyaffa.firdaus@gmail.com');
-                $message->to($reserve['email']);
-                $message->subject('Kode Verifikasi Hotel');
-            });            
+            // Mail::send('email.verifyTemplate', $reserve, function($message) use ($reserve) {
+            //     $message->from('akhdan.musyaffa.firdaus@gmail.com');
+            //     $message->to($reserve['email']);
+            //     $message->subject('Kode Verifikasi Hotel');
+            // });      
 
             Session::flash('success', 'Berhasil memesan, cek email untuk verifikasi');            
 
-            return redirect()->route('book.verifikasi', $reservasi->id);
+            return redirect()->route('book.verifikasi', $reservasi->pembayaran['kode_booking']);
         }
         else {
             Session::flash('fail', 'Ada Kesalahan Input data');   
@@ -173,9 +171,12 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function batalPesan()
     {
-        
+        $request->session()->forget(['detail', 'kode', 'kode_kamar']);
+        $request->session()->flush();
+
+        return redirect()->route('home');
     }
 
     public function search(Request $request)
@@ -200,46 +201,49 @@ class BookController extends Controller
         return view('book.bookSearch', [ 'hasil' => $jumlahpencarian])->withLokasis($lokasis)->withSearch($search)->withDetail($detail);
     }
 
-    public function showVerify(Request $request, $id) {
-        $reservasi = Reservasi::find($id);    
-        $diff = Carbon::parse($reservasi->check_in)->diffInDays(Carbon::parse($reservasi->check_out));
-        return view('book.verifikasi', ['diff' => $diff])->withReservasi($reservasi);
+    public function showVerify(Request $request, $kode_booking) {
+        $pembayaran = Pembayaran::where('kode_booking', $kode_booking)->first();    
+        $diff = Carbon::parse($pembayaran->reservasi['check_in'])->diffInDays(Carbon::parse($pembayaran->reservasi['check_out']));
+        return view('book.verifikasi', ['diff' => $diff])->withPembayaran($pembayaran);
     }
 
-    public function verify(Request $request, $id) {
+    public function verify(Request $request, $kode_booking) {
         $request->validate([
             'kodenya' => 'required',
             'status' => 'required',
             'jumlah' => 'required',
-            'review' => 'required',
             'rate' => 'required'
         ]);
 
-        $reservasi = Reservasi::find($id);
+        $pembayaran = Pembayaran::where('kode_booking', $kode_booking)->first();
 
-        $setengahnya = (50/100) * $reservasi->kamar->harga;
+        $setengahnya = (50/100) * $pembayaran->reservasi->kamar['harga'];
 
-        if (decrypt($reservasi->pembayaran->kode_verifikasi) == $request->kodenya) {
+        if (decrypt($pembayaran->kode_verifikasi) == $request->kodenya) {
             if ($request->jumlah < $setengahnya) {
                 Session::flash('fail', 'Nominal minimal 50% dari harga sewa');
                 return redirect()->back();
             } else {
                 $feedback = new Feedback();
                 $feedback->subject = 'Review';
-                $feedback->message = $request->review;
+                $feedback->message = $request->note;
                 $feedback->rating = $request->rate;
                 $feedback->save();
 
                 
-                $reservasi->feedback()->associate($feedback);
-                $reservasi->save();
+                $pembayaran->reservasi->feedback()->associate($feedback);
+                $pembayaran->save();
 
-                if ($request->jumlah >= $setengahnya && $request->jumlah < $reservasi->kamar->harga) {
+
+                                
+
+                if ($request->jumlah >= $setengahnya && $request->jumlah < $pembayaran->reservasi->kamar['harga']) {
                     $status = 'Uang Muka';
                 } else {                    
                     $status = 'Lunas';
                 }
-                $reservasi->pembayaran->update([
+                $pembayaran->reservasi->kamar->update('kamar', 'Terisi');
+                $pembayaran->update([
                     'status' => $status,         
                     'jumlahPembayaran' => $request->jumlah
                 ]);

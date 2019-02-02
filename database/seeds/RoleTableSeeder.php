@@ -12,24 +12,24 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        $role_manager = new Role();
-        $role_manager->nama = 'Member';
-        $role_manager->deskripsi = 'Pelanggan tetap';
-        $role_manager->save();
+        $member = new Role();
+        $member->nama = 'Member';
+        $member->deskripsi = 'Pelanggan tetap';
+        $member->save();
 
-        $role_manager = new Role();
-        $role_manager->nama = 'Manajer';
-        $role_manager->deskripsi = 'Pimpinan tertinggi di hotel yang bertugas mengontrol dan mengawasi seluruh kegiatan di dalam dan diluar hotel, serta mengoordinir segala department yang ada di hotel';
-        $role_manager->save();
+        $admin = new Role();
+        $admin->nama = 'Admin';
+        $admin->deskripsi = 'Orang yang memiliki hak akses ke segala hal';
+        $admin->save();
 
-        $role_headReceptionist = new Role();
-        $role_headReceptionist->nama = 'Kepala Resepsionis';
-        $role_headReceptionist->deskripsi = 'Yaitu pimpinan di seksi resepsi yang bertanggung jawab atas pengawasan dan kelancaran dari kegiatan di bagian penanganan tamu check-in, guest in house, dan check-out';
-        $role_headReceptionist->save();
+        $resepsionis = new Role();
+        $resepsionis->nama = 'Resepsionis';
+        $resepsionis->deskripsi = 'Petugas resepsionis penerima tamu check-in, guest in house dan check-out';
+        $resepsionis->save();
 
-        $receptionist = new Role();
-        $receptionist->nama = 'Resepsionis';
-        $receptionist->deskripsi = 'Petugas resepsionis penerima tamu check-in, guest in house dan check-out';
-        $receptionist->save();        
+        $manajer = new Role();
+        $manajer->nama = 'Manajer';
+        $manajer->deskripsi = 'Pengelola Hotel';
+        $manajer->save();        
     }
 }

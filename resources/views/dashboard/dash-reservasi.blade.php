@@ -4,20 +4,22 @@
 @include('partials.navbar')
 @include('partials.message')
 <div class="container">
-	<h1>Data Reservasi</h1>	
+	<h1>Reservasi</h1>	
 	<hr class="border">
-	<div class="row">
+	<h3>Terproses</h3>
+	@if(count($pembayaran) > 0)
+	<div class="row">	
 		@foreach($pembayaran as $count => $pem)
 		@if($count % 3 == 0)
-		</div><div class="row">
-		@endif
+		</div><div class="row">			
+		@endif			
 			<div class="col-lg-4 mt-2 mt-2">
 				<div class="card border-0 shadow">
-					<div class="card-header bg-success text-light"  data-toggle="collapse" href="#collapseExample{{ $pem->id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
-						{{ $pem->kode_booking }} | 
+					<div class="card-header bg-success text-light" data-toggle="collapse" href="#terproses{{ $pem->id }}" role="button" aria-expanded="false" aria-controls="terproses">
+						{{ decrypt($pem->kode_booking) }} | 
 							{{ Carbon\Carbon::parse($pem->reservasi['check_in'])->diffForHumans(\Carbon\Carbon::now()) }} <i class="fas fa-caret-down"></i>
 					</div>
-					<div class="collapse" id="collapseExample{{ $pem->id }}">
+					<div class="collapse" id="terproses{{ $pem->id }}">
 						<div class="card-body">
 							<h5><small>a.n. </small> 
 								@if($pem->reservasi['user'] == null)
@@ -41,9 +43,16 @@
 					</div>
 				</div>
 			</div>
-		@endforeach
-		</div>		
-		<hr>
+			@endforeach
+		</div>
+		@else
+		<div class="jumbotron text-center w-100">
+		  <h3>Tidak ada bookingan</h3>
+		</div>
+		@endif
+	<hr>
+	<h3>Proses</h3>
+	@if(count($pembayaran1) > 0)
 		<div class="row">
 			@foreach($pembayaran1 as $count => $pem1)
 			@if($count % 3 == 0)
@@ -52,16 +61,16 @@
 				<div class="col-lg-4 mt-2 mb-2">
 					<div class="card border-0 shadow">
 					@if($pem1->status == 'Lunas')
-					<div class="card-header bg-success text-light" data-toggle="collapse" href="#collapseExample{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+					<div class="card-header bg-success text-light" data-toggle="collapse" href="#terproses{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="terproses">
 					@elseif($pem1->status == 'Uang Muka')
-					<div class="card-header bg-warning text-light" data-toggle="collapse" href="#collapseExample{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+					<div class="card-header bg-warning text-light" data-toggle="collapse" href="#terproses{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="terproses">
 					@else
-					<div class="card-header bg-danger text-light" data-toggle="collapse" href="#collapseExample{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+					<div class="card-header bg-danger text-light" data-toggle="collapse" href="#terproses{{ $pem1->id }}" role="button" aria-expanded="false" aria-controls="terproses">
 					@endif
-						{{ $pem1->kode_booking }} |
+						{{ decrypt($pem1->kode_booking) }} |
 						{{ Carbon\Carbon::parse($pem1->reservasi['check_in'])->diffForHumans(\Carbon\Carbon::now()) }} <i class="fas fa-caret-down"></i>
 					</div>
-					<div class="collapse" id="collapseExample{{ $pem1->id }}">
+					<div class="collapse" id="terproses{{ $pem1->id }}">
 					<div class="card-body">
 						<h5><small>a.n. </small> 
 							@if($pem1->reservasi->user == null)
@@ -83,6 +92,10 @@
 							<dl class="row mb-0">
 								<dd class="col-6">Status</dd>					
 								<dt class="col">{{$pem1->status}} | IDR {{ number_format($pem1->jumlahPembayaran - $pem1->reservasi->kamar['harga'], null, ',', '.') }}</dt>
+							</dl>
+							<dl class="row mb-0">
+								<dd class="col-6">Kode Verifikasi</dd>					
+								<dt class="col">{{ decrypt($pem1->kode_verifikasi) }}</dt>
 							</dl>
 						</div>
 						<hr>
@@ -112,6 +125,12 @@
 				</div>
 			@endforeach
 		</div>
+		@else
+		<div class="jumbotron text-center">
+			<h2>Tidak ada bookingan</h2>
+		</div>
+		@endif
+
 	</div>
 </div>
 @endsection

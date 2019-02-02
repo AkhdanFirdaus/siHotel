@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Hotel;
 
 class HotelController extends Controller
 {
@@ -13,7 +14,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -43,9 +44,11 @@ class HotelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nama)
     {
-        //
+        $hotel = Hotel::where($nama);
+        $jmlkamar = Hotel::withCount('kamar')->where($nama);
+        return view('hotel.dashboard-hotel', ['hasilkamar' => $jmlkamar])->withHotel($hotel);
     }
 
     /**

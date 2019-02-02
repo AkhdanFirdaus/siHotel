@@ -13,7 +13,7 @@
 			<div class="card-text">
 				<dl class="row mb-0">
 					<dd class="col-4">Kode Booking</dd>
-					<dt class="col">{{ decrypt($pembayaran->kode_booking) }}</dt>
+					<dt class="col">{{ $pembayaran->kode_booking }}</dt>
 				</dl>
 				<dl class="row mb-0">
 					<dd class="col-4">Check In</dd>

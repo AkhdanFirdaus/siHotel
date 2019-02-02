@@ -13,4 +13,8 @@ class Hotel extends Model
     public function lokasi() {
     	return $this->belongsTo('App\Lokasi');
     }
+
+    public function user() {
+    	return $this->hasOne('App\User');
+    }
 }

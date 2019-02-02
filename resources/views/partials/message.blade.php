@@ -8,6 +8,11 @@
 		<strong>Gagal: </strong> {{Session::get('fail') }}
 	</div>
 
+@elseif(Session::has('cancel'))
+	<div class="alert alert-danger">
+		<strong>Berhasil: </strong> {{Session::get('fail') }}
+	</div>
+
 @elseif(Session::has('tanggal'))
 	<div class="alert alert-danger">
 		<strong>Tanggal </strong> {{Session::get('tanggal') }}

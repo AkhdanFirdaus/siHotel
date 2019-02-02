@@ -19,26 +19,37 @@ Auth::routes();
 
 Route::get('/', 'PagesController@home')->name('home');
 
-Route::middleware('admin')->prefix('dashboard')->group(function() {
-	Route::get('/', 'AdminController@dashboard')->name('dashboard');
-	Route::get('reservasi', 'AdminController@lookReserve')->name('dashboard.reservasi');
+Route::middleware('admin')->prefix('dashboard')->group(function() {	
 
-	//Aksi
-	Route::post('{kode_booking}/approve', 'AdminController@approve')->name('dashboard.approve');
-	Route::delete('reservasi/delete/{id}', 'AdminController@destroy')->name('dashboard.reservasi.delete');
-	Route::post('{id}/warn', 'AdminController@warnMail')->name('dashboard.warn');
+	Route::get('manageUser', 'AdminController@manageUser')->name('dashboard.manageUser');
+	Route::put('manageUser/{id}', 'AdminController@updateUser')->name('dashboard.updateUser');
 
-	Route::resource('hotel', 'HotelController');
-	Route::resource('kamar', 'KamarController');
+	Route::middleware('resepsionis')->group(function() {
+		Route::get('/', 'ResepsionisController@dashboard')->name('dashboard');
+		Route::get('reservasi', 'ResepsionisController@lookReserve')->name('dashboard.reservasi');
+
+		//Aksi
+		Route::post('{kode_booking}/approve', 'ResepsionisController@approve')->name('dashboard.approve');
+		Route::delete('reservasi/delete/{kode_booking}', 'ResepsionisController@destroy')->name('dashboard.reservasi.delete');
+		Route::post('{kode_booking}/warn', 'ResepsionisController@warnMail')->name('dashboard.warn');
+	});
+
+	Route::middleware('hotel')->group(function() {
+		Route::resource('hotel', 'HotelController');
+		Route::resource('kamar', 'KamarController');
+	});
 });
 
-Route::resource('book', 'BookController', ['except' => ['create', 'store']]);
-Route::post('{id}/pesan', 'BookController@pesan')->name('book.pesan');
 Route::post('cari', 'BookController@pesan')->name('book.pesan');
 Route::post('cari', 'BookController@search')->name('book.search');
 
-Route::get('{id}/verifikasi', 'BookController@showVerify')->name('book.verifikasi');
-Route::post('{id}/verifikasi', 'BookController@verify')->name('book.inverifikasi');
+Route::get('pesan/{slug}', 'BookController@show')->where('slug', '[\w\d\-\_]+')->name('book.show');
+Route::get('pesan/{kode_kamar}/pesan', 'BookController@edit')->name('book.kamar');
+Route::post('pesan/{kode_booking}/pesan', 'BookController@pesan')->name('book.pesan');
+Route::get('pesan/cancel', 'BookController@batalPesan')->name('book.cancel');
+
+Route::get('{kode_booking}/verifikasi', 'BookController@showVerify')->name('book.verifikasi');
+Route::post('{kode_booking}/verifikasi', 'BookController@verify')->name('book.inverifikasi');
 
 Route::post('look/cari', 'LookController@search')->name('look.search');
 

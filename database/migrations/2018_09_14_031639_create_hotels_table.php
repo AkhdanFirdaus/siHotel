@@ -16,12 +16,13 @@ class CreateHotelsTable extends Migration
         Schema::create('hotels', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nama');
+            $table->string('slug');
             $table->integer('lokasi_id')->unsigned();
             $table->string('hotel_image')->default('default.png');
             $table->string('alamat');
             $table->string('email')->unique();
-            $table->string('visi');
-            $table->string('misi');
+            $table->string('rekening');
+            $table->string('no_rekening');
             $table->string('moto');
             $table->timestamps();
         });

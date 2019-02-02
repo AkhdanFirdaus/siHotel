@@ -15,8 +15,9 @@ class AdminOnly
      */
     public function handle($request, Closure $next)
     {
-        $request->user()->authorizeRoles(['Manajer', 'Kepala Resepsionis', 'Resepsionis']);        
-
+        if (!$request->user()->authorizeRoles('Admin')) {
+            return redirect()->route('home');
+        }
         return $next($request);
     }
 }

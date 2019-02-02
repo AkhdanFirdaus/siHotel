@@ -50,7 +50,7 @@
 				<div class="card-body">
 					<h5 class="card-title">{{ $hotel->nama }}</h5>
 					<p class="card-text">{{ $hotel->alamat }}</p>
-					<a href="{{ route("book.show", $hotel->id)}}" class="card-link">Pesan Sekarang</a>
+					<a href="{{ route("book.show", $hotel->slug)}}" class="card-link">Pesan Sekarang</a>
 				</div>
 			</div>
 		</div>

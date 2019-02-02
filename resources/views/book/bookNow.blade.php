@@ -8,8 +8,7 @@
 </style>
 @endsection
 
-@section('content')
-{!! Form::open(['route' => ['book.pesan', $kamar->id] , 'method' => 'POST']) !!}				
+@section('content')				
 <div class="container p-5">		
 	<div class="row">
 		<div class="col-lg-8">				
@@ -70,7 +69,7 @@
 		</div>
 		<div class="col-lg-4">
 			<div class="position-fixed">
-			<div class="card mb-4 shadow bg-success text-light">
+			<div class="card mb-4 shadow bg-success text-light" style="width: 20rem;">
 				<div class="card-body">
 					<dl>
 						<dd><h4>Kode Pemesanan</h4></dd>
@@ -99,16 +98,17 @@
 			</div>
 			<div class="form-row mt-3">
 				<div class="col-6">
-					<a class="btn btn-danger btn-block shadow text-light" onclick="history.go(-1)">Batal Pesan</a>
+					<a class="btn btn-danger btn-block shadow text-light" href="{{ route('book.cancel') }}">Batal Pesan</a>
 				</div>		              
 				<div class="col-6">
-					{{ Form::submit('Pesan', ['class' => 'btn btn-primary btn-block shadow'])}}
+					{!! Form::open(['route' => ['book.pesan', $kamar->id] , 'method' => 'POST']) !!}
+						{{ Form::submit('Pesan', ['class' => 'btn btn-primary btn-block shadow'])}}
+					{!! Form::close() !!}
 				</div>		              
 			</div>
 			</div>			
 		</div>
-	</div>					        			            			            
-	{!! Form::close() !!}
+	</div>					        			            		            
 </div>
 @include('partials.message')
 @endsection
