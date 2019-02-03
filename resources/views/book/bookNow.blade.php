@@ -64,6 +64,12 @@
 						{{ Form::text('kontak', old('kontak'), ['class' => 'form-control', 'required' => 'required']) }}
 					</div>	                					            
         		</div>						
+				<div class="form-group">
+					<div class="d-inline">
+						<a href="{{ route('login') }}" class="btn btn-link">Sudah punya akun?</a>
+						<a href="{{ route('register') }}" class="btn btn-link">daftar</a>
+					</div>
+				</div>
             </div>			
             @endif            
 		</div>

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Auth;
 
 class AdminOnly
 {
@@ -15,9 +16,9 @@ class AdminOnly
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->authorizeRoles('Admin')) {
-            return redirect()->route('home');
-        }
+
+        $user = Auth::check();
+        dd($request->user());
         return $next($request);
     }
 }

@@ -39,7 +39,7 @@
                         <i class="fas fa-hands-helping fa-4x" data-fa-transform="shrink-2 down-1" data-fa-mask="fas fa-circle" style="color: #E91E63;"></i>
                         <h5 class=" mt-3 card-title">Terpercaya</h5>
                         <p class="card-text px-3">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="card-link" data-toggle="collapse" href="#collapseExample3" role="button" aria-expanded="false" aria-controls="collapseExample">Cek Status Bookingmu</a>
+                        <a class="card-link" data-toggle="collapse" href="#collapseExample3" role="button" aria-expanded="false" aria-controls="collapseExample3">Cek Status Bookingmu</a>
                     </div>
                 </div>
             </div>        

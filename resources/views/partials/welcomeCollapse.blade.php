@@ -61,7 +61,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Masukkan kode booking" aria-label="Recipient's username" aria-describedby="button-addon2" name="cari">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary" type="button" id="button-addon2">Cari</button>
+                    <button type="submit" class="btn btn-outline-light" type="button" id="button-addon2">Cari</button>
                 </div>
             </div>        
         {!! Form::close() !!}

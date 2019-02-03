@@ -9,22 +9,22 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+ */
 
 Auth::routes();
 
 Route::get('/', 'PagesController@home')->name('home');
 
-Route::middleware('admin')->prefix('dashboard')->group(function() {	
+Route::middleware(['auth', 'web'])->group(function () {
+	Route::view('/home', 'home')->name('home');
+});
+
+Route::middleware('admin')->prefix('dashboard')->group(function () {
 
 	Route::get('manageUser', 'AdminController@manageUser')->name('dashboard.manageUser');
 	Route::put('manageUser/{id}', 'AdminController@updateUser')->name('dashboard.updateUser');
 
-	Route::middleware('resepsionis')->group(function() {
+	Route::middleware('resepsionis')->group(function () {
 		Route::get('/', 'ResepsionisController@dashboard')->name('dashboard');
 		Route::get('reservasi', 'ResepsionisController@lookReserve')->name('dashboard.reservasi');
 
@@ -34,7 +34,7 @@ Route::middleware('admin')->prefix('dashboard')->group(function() {
 		Route::post('{kode_booking}/warn', 'ResepsionisController@warnMail')->name('dashboard.warn');
 	});
 
-	Route::middleware('hotel')->group(function() {
+	Route::middleware('hotel')->group(function () {
 		Route::resource('hotel', 'HotelController');
 		Route::resource('kamar', 'KamarController');
 	});
