@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Hotel;
+use App\Kamar;
+use App\Http\Resources\KamarResource;
 
 class KamarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +20,7 @@ class KamarController extends Controller
      */
     public function index()
     {
-        //
+        return KamarResource::collection(Kamar::with('fasilitas')->paginate(10));
     }
 
     /**
@@ -32,9 +39,21 @@ class KamarController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Hotel $hotel)
     {
-        //
+        $kode = Kamar::latest()->first();
+        $kamar = Kamar::firstOrCreate(
+            [
+                'hotel_id' => $hotel->id,
+            ],
+            [
+                'kode_kamar' => ++$kode->kode_kamar,
+                'harga' => $request->harga,
+                'status' => $request->status,
+            ]
+        );
+
+        return new KamarResource($kamar);
     }
 
     /**

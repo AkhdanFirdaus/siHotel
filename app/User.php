@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -27,26 +28,41 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function roles() {
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    public function roles()
+    {
         return $this->belongsToMany('App\Role');
     }
 
-    public function authorizeRoles($roles) {
+    public function authorizeRoles($roles)
+    {
         if (is_array($roles)) {
             return $this->hasAnyRole($roles) || redirect()->route('home');
         }
         return $this->hasRole($roles) || redirect()->route('home');
     }
 
-    public function hasAnyRole($roles) {
+    public function hasAnyRole($roles)
+    {
         return null !== $this->roles()->whereIn('nama', $roles)->first();
     }
 
-    public function hasRole($role) {
+    public function hasRole($role)
+    {
         return null !== $this->roles()->where('nama', $role)->first();
     }
 
-    public function hotel() {
+    public function hotel()
+    {
         return $this->belongsTo('App\Hotel');
     }
 }

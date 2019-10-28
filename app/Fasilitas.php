@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Fasilitas extends Model
 {
-    public function kamars() {
-    	return $this->belongsToMany('APP\Kamar');
+    public function kamars()
+    {
+        return $this->belongsToMany('APP\Kamar');
     }
 }

@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Hotel;
+use App\Http\Resources\HotelResource;
 
 class HotelController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +19,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return HotelResource::collection(Hotel::with('kamars')->paginate(25));
     }
 
     /**
@@ -35,7 +30,20 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $hotel = Hotel::create([
+            'nama' => $request->$nama,
+            'slug' => str_slug($request->$nama, '-'),
+            'hotel_image' => $request->hotel_image,
+            'alamat' => $request->alamat,
+            'email' => $request->email,
+            'rekening' => $request->rekening,
+            'no_rekening' => $request->no_rekening,
+            'moto' => $request->moto,
+            'lokasi_id' => $request->lokasi_id,
+            'user_id' => $request->user()->id,
+        ]);
+
+        return new HotelResource($hotel);
     }
 
     /**
@@ -44,22 +52,9 @@ class HotelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($nama)
+    public function show(Hotel $hotel)
     {
-        $hotel = Hotel::where($nama);
-        $jmlkamar = Hotel::withCount('kamar')->where($nama);
-        return view('hotel.dashboard-hotel', ['hasilkamar' => $jmlkamar])->withHotel($hotel);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return new HotelResource($hotel);
     }
 
     /**
@@ -69,9 +64,15 @@ class HotelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Hotel $hotel)
     {
-        //
+        if ($request->user()->id !== $hotel->user_id) {
+            return response()->json(['error' => 'You can only manage your own hotel'], 403);
+        }
+
+        $hotel->update($request->only(['hotel_image', 'alamat', 'email', 'rekening', 'no_rekening', 'moto']));
+
+        return new HotelResource($hotel);
     }
 
     /**
@@ -80,8 +81,10 @@ class HotelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Hotel $hotel)
     {
-        //
+        $hotel->delete();
+
+        return response()->json(null, 204);
     }
 }
